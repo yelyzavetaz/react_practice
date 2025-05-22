@@ -32,14 +32,24 @@ const getFilteredProducts = (productList, filters) => {
     );
   }
 
+  if (filters.query !== '') {
+    const normalizedQuery = filters.query.trim().toLowerCase();
+
+    filteredProducts = filteredProducts.filter(product => {
+      return product.name.toLowerCase().includes(normalizedQuery);
+    });
+  }
+
   return filteredProducts;
 };
 
 export const App = () => {
   const [userIdSelected, setUserIdSelected] = useState(-1);
+  const [query, setQuery] = useState('');
 
   const filteredProducts = getFilteredProducts(products, {
     userIdSelected,
+    query,
   });
 
   return (
@@ -96,21 +106,29 @@ export const App = () => {
                   type="text"
                   className="input"
                   placeholder="Search"
-                  value="qwe"
+                  value={query}
+                  onChange={event => {
+                    setQuery(event.target.value.trimStart());
+                  }}
                 />
 
                 <span className="icon is-left">
                   <i className="fas fa-search" aria-hidden="true" />
                 </span>
 
-                <span className="icon is-right">
-                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                  <button
-                    data-cy="ClearButton"
-                    type="button"
-                    className="delete"
-                  />
-                </span>
+                {query && (
+                  <span className="icon is-right">
+                    {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                    <button
+                      data-cy="ClearButton"
+                      type="button"
+                      className="delete"
+                      onClick={() => {
+                        setQuery('');
+                      }}
+                    />
+                  </span>
+                )}
               </p>
             </div>
 
