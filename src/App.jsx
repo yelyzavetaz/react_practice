@@ -75,33 +75,16 @@ export const App = () => {
               >
                 All
               </a>
-
-              <a
-                data-cy="FilterUser"
-                href="#/"
-                className={userIdSelected === 1 ? 'is-active' : ''}
-                onClick={() => setUserIdSelected(1)}
-              >
-                User 1
-              </a>
-
-              <a
-                data-cy="FilterUser"
-                href="#/"
-                className={userIdSelected === 2 ? 'is-active' : ''}
-                onClick={() => setUserIdSelected(2)}
-              >
-                User 2
-              </a>
-
-              <a
-                data-cy="FilterUser"
-                href="#/"
-                className={userIdSelected === 3 ? 'is-active' : ''}
-                onClick={() => setUserIdSelected(3)}
-              >
-                User 3
-              </a>
+              {usersFromServer.map(user => (
+                <a
+                  data-cy="FilterUser"
+                  href="#/"
+                  className={userIdSelected === user.id ? 'is-active' : ''}
+                  onClick={() => setUserIdSelected(user.id)}
+                >
+                  {user.name}
+                </a>
+              ))}
             </p>
 
             <div className="panel-block">
@@ -145,29 +128,16 @@ export const App = () => {
               >
                 All
               </a>
-
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1 is-info"
-                href="#/"
-              >
-                Category 1
-              </a>
-
-              <a data-cy="Category" className="button mr-2 my-1" href="#/">
-                Category 2
-              </a>
-
-              <a
-                data-cy="Category"
-                className="button mr-2 my-1 is-info"
-                href="#/"
-              >
-                Category 3
-              </a>
-              <a data-cy="Category" className="button mr-2 my-1" href="#/">
-                Category 4
-              </a>
+              {categoriesFromServer.map(category => (
+                <a
+                  data-cy="Category"
+                  className="button mr-2 my-1"
+                  href="#/"
+                  key={category.id}
+                >
+                  {category.title}
+                </a>
+              ))}
             </div>
 
             <div className="panel-block">
