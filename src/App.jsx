@@ -40,21 +40,42 @@ const getFilteredProducts = (productList, filters) => {
     });
   }
 
+  if (filters.selectedCategories.length > 0) {
+    filteredProducts = filteredProducts.filter(product => {
+      return filters.selectedCategories.includes(product.category.id);
+    });
+  }
+
   return filteredProducts;
 };
 
 export const App = () => {
   const [userIdSelected, setUserIdSelected] = useState(-1);
   const [query, setQuery] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const filteredProducts = getFilteredProducts(products, {
     userIdSelected,
     query,
+    selectedCategories,
   });
 
   const resetFilters = () => {
     setUserIdSelected(-1);
     setQuery('');
+    setSelectedCategories([]);
+  };
+
+  const resetSelectedCategories = () => {
+    setSelectedCategories([]);
+  };
+
+  const selectCategory = categoryId => {
+    if (selectedCategories.includes(categoryId)) {
+      setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+    } else {
+      setSelectedCategories([...selectedCategories, categoryId]);
+    }
   };
 
   return (
@@ -124,16 +145,20 @@ export const App = () => {
               <a
                 href="#/"
                 data-cy="AllCategories"
-                className="button is-success mr-6 is-outlined"
+                className={`button is-success mr-6 ${selectedCategories.length > 0 ? 'is-outlined' : ''}`}
+                onClick={resetSelectedCategories}
               >
                 All
               </a>
               {categoriesFromServer.map(category => (
                 <a
                   data-cy="Category"
-                  className="button mr-2 my-1"
+                  className={`button mr-2 my-1 ${
+                    selectedCategories.includes(category.id) ? 'is-info' : ''
+                  }`}
                   href="#/"
                   key={category.id}
+                  onClick={() => selectCategory(category.id)}
                 >
                   {category.title}
                 </a>
