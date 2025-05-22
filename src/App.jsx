@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
-import React from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 import ProductTable from './components/ProductTable/ProductTable';
 
@@ -23,109 +23,152 @@ const products = productsFromServer.map(product => {
   };
 });
 
-export const App = () => (
-  <div className="section">
-    <div className="container">
-      <h1 className="title">Product Categories</h1>
+const getFilteredProducts = (productList, filters) => {
+  let filteredProducts = [...productList];
 
-      <div className="block">
-        <nav className="panel">
-          <p className="panel-heading">Filters</p>
+  if (filters.userIdSelected !== -1) {
+    filteredProducts = filteredProducts.filter(
+      product => product.user.id === filters.userIdSelected,
+    );
+  }
 
-          <p className="panel-tabs has-text-weight-bold">
-            <a data-cy="FilterAllUsers" href="#/">
-              All
-            </a>
+  return filteredProducts;
+};
 
-            <a data-cy="FilterUser" href="#/">
-              User 1
-            </a>
+export const App = () => {
+  const [userIdSelected, setUserIdSelected] = useState(-1);
 
-            <a data-cy="FilterUser" href="#/" className="is-active">
-              User 2
-            </a>
+  const filteredProducts = getFilteredProducts(products, {
+    userIdSelected,
+  });
 
-            <a data-cy="FilterUser" href="#/">
-              User 3
-            </a>
-          </p>
+  return (
+    <div className="section">
+      <div className="container">
+        <h1 className="title">Product Categories</h1>
 
-          <div className="panel-block">
-            <p className="control has-icons-left has-icons-right">
-              <input
-                data-cy="SearchField"
-                type="text"
-                className="input"
-                placeholder="Search"
-                value="qwe"
-              />
+        <div className="block">
+          <nav className="panel">
+            <p className="panel-heading">Filters</p>
 
-              <span className="icon is-left">
-                <i className="fas fa-search" aria-hidden="true" />
-              </span>
+            <p className="panel-tabs has-text-weight-bold">
+              <a
+                data-cy="FilterAllUsers"
+                href="#/"
+                className={userIdSelected === -1 ? 'is-active' : ''}
+                onClick={() => setUserIdSelected(-1)}
+              >
+                All
+              </a>
 
-              <span className="icon is-right">
-                {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                <button
-                  data-cy="ClearButton"
-                  type="button"
-                  className="delete"
-                />
-              </span>
+              <a
+                data-cy="FilterUser"
+                href="#/"
+                className={userIdSelected === 1 ? 'is-active' : ''}
+                onClick={() => setUserIdSelected(1)}
+              >
+                User 1
+              </a>
+
+              <a
+                data-cy="FilterUser"
+                href="#/"
+                className={userIdSelected === 2 ? 'is-active' : ''}
+                onClick={() => setUserIdSelected(2)}
+              >
+                User 2
+              </a>
+
+              <a
+                data-cy="FilterUser"
+                href="#/"
+                className={userIdSelected === 3 ? 'is-active' : ''}
+                onClick={() => setUserIdSelected(3)}
+              >
+                User 3
+              </a>
             </p>
-          </div>
 
-          <div className="panel-block is-flex-wrap-wrap">
-            <a
-              href="#/"
-              data-cy="AllCategories"
-              className="button is-success mr-6 is-outlined"
-            >
-              All
-            </a>
+            <div className="panel-block">
+              <p className="control has-icons-left has-icons-right">
+                <input
+                  data-cy="SearchField"
+                  type="text"
+                  className="input"
+                  placeholder="Search"
+                  value="qwe"
+                />
 
-            <a
-              data-cy="Category"
-              className="button mr-2 my-1 is-info"
-              href="#/"
-            >
-              Category 1
-            </a>
+                <span className="icon is-left">
+                  <i className="fas fa-search" aria-hidden="true" />
+                </span>
 
-            <a data-cy="Category" className="button mr-2 my-1" href="#/">
-              Category 2
-            </a>
+                <span className="icon is-right">
+                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                  <button
+                    data-cy="ClearButton"
+                    type="button"
+                    className="delete"
+                  />
+                </span>
+              </p>
+            </div>
 
-            <a
-              data-cy="Category"
-              className="button mr-2 my-1 is-info"
-              href="#/"
-            >
-              Category 3
-            </a>
-            <a data-cy="Category" className="button mr-2 my-1" href="#/">
-              Category 4
-            </a>
-          </div>
+            <div className="panel-block is-flex-wrap-wrap">
+              <a
+                href="#/"
+                data-cy="AllCategories"
+                className="button is-success mr-6 is-outlined"
+              >
+                All
+              </a>
 
-          <div className="panel-block">
-            <a
-              data-cy="ResetAllButton"
-              href="#/"
-              className="button is-link is-outlined is-fullwidth"
-            >
-              Reset all filters
-            </a>
-          </div>
-        </nav>
-      </div>
+              <a
+                data-cy="Category"
+                className="button mr-2 my-1 is-info"
+                href="#/"
+              >
+                Category 1
+              </a>
 
-      <div className="box table-container">
-        <p data-cy="NoMatchingMessage">
-          No products matching selected criteria
-        </p>
-        <ProductTable products={products} />
+              <a data-cy="Category" className="button mr-2 my-1" href="#/">
+                Category 2
+              </a>
+
+              <a
+                data-cy="Category"
+                className="button mr-2 my-1 is-info"
+                href="#/"
+              >
+                Category 3
+              </a>
+              <a data-cy="Category" className="button mr-2 my-1" href="#/">
+                Category 4
+              </a>
+            </div>
+
+            <div className="panel-block">
+              <a
+                data-cy="ResetAllButton"
+                href="#/"
+                className="button is-link is-outlined is-fullwidth"
+              >
+                Reset all filters
+              </a>
+            </div>
+          </nav>
+        </div>
+
+        <div className="box table-container">
+          <p data-cy="NoMatchingMessage">
+            No products matching selected criteria
+          </p>
+          <ProductTable
+            products={filteredProducts}
+            userIdSelected={userIdSelected}
+          />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
